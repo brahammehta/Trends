@@ -52,11 +52,27 @@ def extract_words(text):
     >>> extract_words("paperclips! they're so awesome, cool, & useful!")
     ['paperclips', 'they', 're', 'so', 'awesome', 'cool', 'useful']
     """
-    "*** YOUR CODE HERE ***"
-    total=string.punctuation + string.digits
-    for words in total:
-      text=text.replace(words,' ')
-    return text.split()
+    "*** YOUR CODE HERE ***"    
+    i = 0
+    new_list = list(text) 
+    return_list = []
+    new_word = ""
+    for each_letter in new_list:
+        i += 1
+        if i == len(new_list) and each_letter in ascii_letters:
+            new_word += each_letter
+            return_list += [str(new_word)]
+        elif each_letter not in ascii_letters:
+            if new_word != "":
+                return_list += [str(new_word)]
+            new_word = ""        
+        elif (each_letter == ' ') :
+            return_list += [str(new_word)]
+            new_word = ""
+        else:
+            new_word += each_letter
+
+    return return_list
 
 def get_word_sentiment(word):
     """Return a number between -1 and +1 representing the degree of positive or
@@ -97,8 +113,18 @@ def analyze_tweet_sentiment(tweet):
     """
     average = None
     "*** YOUR CODE HERE ***"
-    scores = [get_word_sentiment(x) for x in tweet_words(tweet) if get_word_sentiment(x) != None]
-    return sum(scores)/len(scores)
+    sentiment_list = []
+    words = tweet_words(tweet)
+    total, count = 0,0
+    for each_word in words:  #In each word, find total sentiment and number of words
+        if has_sentiment(get_word_sentiment(each_word)) == True:
+            total += sentiment_value(get_word_sentiment(each_word))
+            count += 1
+    if count == 0: #If there is no count, then the sentiment is Nuetral, or None
+        return make_sentiment(None)
+    else: #Else takes the average of the sentiments for words
+        average = make_sentiment(total/count)
+        return average
  
 
 @main
